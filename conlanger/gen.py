@@ -162,7 +162,7 @@ def gen_word(lang):
             sylEdges = [1]+[i-word[:i].count('$') for i in range(len(word)) if word[i] == '$']
             while '$' in word:
                 word.remove('$')
-            return Word(word, sylEdges, lang.cats['graphs'])
+            return Word(word, lang.cats['graphs'], sylEdges)
     else:
         raise ExceededMaxRunsError()
 
@@ -194,4 +194,4 @@ def gen_root(lang):
                 break
         else:
             raise ExceededMaxRunsError()
-    return Word(root, None, lang.cats['graphs'])
+    return Word(root, lang.cats['graphs'])

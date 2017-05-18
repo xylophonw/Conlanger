@@ -101,7 +101,7 @@ class Word():
         match_env -- match a sound change environment to the word
         strip     -- remove leading and trailing graphemes
     '''
-    def __init__(self, lexeme=None, syllables=None, graphs=None):
+    def __init__(self, lexeme=None, graphs=None, syllables=None):
         '''Constructor for Word
 
         Arguments:
@@ -203,7 +203,7 @@ class Word():
                 end = i+1
                 break
         return self[start:end]
-
+        
     def find(self, sub, start=None, end=None, return_match=False):
         '''Match a sequence using pattern notation to the word.
 
