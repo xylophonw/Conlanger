@@ -44,14 +44,14 @@ class FormatError(LangException):
 #== Classes ==#
 class Cat(list):
     '''Represents a category of graphemes.
-
+    
     Instance variables:
         values -- the values in the category (list)
     '''
-
+    
     def __init__(self, values=None, cats=None):
         '''Constructor for Cat.
-
+        
         Arguments:
             values -- the values in the category (str, list)
             cats   -- dictionary of categories (dict)
@@ -72,30 +72,30 @@ class Cat(list):
             else:
                 _values.append(value)
         list.__init__(self, _values)
-
+    
     def __repr__(self):
         return f"Cat('{self!s}')"
-
+    
     def __str__(self):
         return ', '.join(self)
-
+    
     def __and__(self, cat):
         values = [value for value in self if value in cat]
         return Cat(values)
-
+    
     def __sub__(self, cat):
         values = [value for value in self if value not in cat]
         return Cat(values)
 
 class Word():
     '''Represents a word as a list of graphemes.
-
+    
     Instance variables:
         sep        -- a character used to disambiguate polygraphs from sequences (chr)
         polygraphs -- a list of multi-letter graphemes (list)
         phones     -- a list of the graphemes in the word (list)
         syllables  -- a list of tuples representing syllables (list)
-
+    
     Methods:
         find      -- match a list using pattern notation to the word
         match_env -- match a sound change environment to the word
@@ -103,7 +103,7 @@ class Word():
     '''
     def __init__(self, lexeme=None, graphs=None, syllables=None):
         '''Constructor for Word
-
+        
         Arguments:
             lexeme    -- the word (str)
             syllables -- list of tuples representing syllables (list)
@@ -120,10 +120,10 @@ class Word():
         else:
             self.phones = parse_word(f' {lexeme} ', self.sep, self.polygraphs)
         self.syllables = syllables #do a bit of sanity checking here
-
+    
     def __repr__(self):
         return f"Word('{self!s}')"
-
+    
     def __str__(self):
         word = curr = ''
         for graph in self.phones:
@@ -143,28 +143,28 @@ class Word():
                 curr = curr[1:]
             word += graph
         return word.strip(self.sep+'#').replace('#',' ')
-
+    
     def __eq__(self, other):
         return isinstance(other, Word) and self.phones == other.phones
-
+    
     def __len__(self):
         return len(self.phones)
-
+    
     def __getitem__(self, key):
         if isinstance(key, slice):
             return Word(self.phones[key])
         else:
             return self.phones[key]
-
+    
     def __setitem__(self, key, value):
         self.phones[key] = value
-
+    
     def __delitem__(self, key):
         del self.phones[key]
-
+    
     def __iter__(self):
         return iter(self.phones)
-
+    
     def __contains__(self, item):
         if isinstance(item, list):
             return self.find(item) != -1
@@ -172,22 +172,22 @@ class Word():
             return self.find(item.phones) != -1
         else:
             return item in self.phones
-
+    
     def __add__(self, other):
         return Word(self.phones + other.phones)
-
+    
     def __mul__(self, other):
         return Word(self.phones * other)
-
+    
     def __rmul__(self, other):
         return Word(self.phones * other)
-
+    
     def copy(self):
         return Word(self.phones, self.syllables)
-
+    
     def reverse(self):
         self.phones.reverse()
-
+    
     def strip(self, chars=None):
         phones = self.phones.copy()
         if chars is None:
@@ -203,15 +203,15 @@ class Word():
                 end = i+1
                 break
         return self[start:end]
-        
+    
     def find(self, sub, start=None, end=None, return_match=False):
         '''Match a sequence using pattern notation to the word.
-
+        
         Arguments:
             sub   -- the list to be found (list)
             start -- the index of the beginning of the range to check (int)
             end   -- the index of the end of the range to check (int)
-
+        
         Returns an int
         '''
         if start is None:
@@ -253,15 +253,15 @@ class Word():
                 return (i, self[i+start:j]) if return_match else i
         else:
             return (-1, []) if return_match else -1
-
+    
     def match_env(self, env, pos=0, tar=None): #test if the env matches the word
         '''Match a sound change environment to the word.
-
+        
         Arguments:
             env -- the environment to be matched (list)
             pos -- the index of the left edge of the target (int)
             tar -- the target (list)
-
+        
         Returns a bool
         '''
         env = env.copy()
@@ -281,7 +281,7 @@ class Word():
                 matchLeft = -1 if env[0] else 0
             matchRight = self.find(env[1], pos+len(tar))
             return matchLeft == matchRight == 0
-
+    
     def replace(self, start, tar, rep):
         rep = rep.copy()
         for i in reversed(range(len(rep))):
@@ -297,11 +297,11 @@ Config = namedtuple('Config', 'patterns, counts, constraints, freq, monofreq')
 #== Functions ==#
 def parse_syms(syms, cats=None):
     '''Parse a string using pattern notation.
-
+    
     Arguments:
         syms -- the input string using pattern notation (str)
         cats -- a list of cats to use for interpreting categories (list)
-
+    
     Returns a list
     '''
     if cats is None:
@@ -329,12 +329,12 @@ def parse_syms(syms, cats=None):
 
 def parse_word(word, sep="'", polygraphs=[]):
     '''Parse a string of graphemes.
-
+    
     Arguments:
         word       -- the word to be parsed (str)
         sep        -- disambiguator character (str)
         polygraphs -- list of polygraphs (list)
-
+    
     Returns a list.
     '''
     #black magic
@@ -352,13 +352,13 @@ def parse_word(word, sep="'", polygraphs=[]):
 
 def split(string, sep=None, nesting=None, minimal=False):
     '''String splitting.
-
+    
     Arguments:
         string  -- the string to be split (str)
         sep     -- the character(s) to split on (str)
         nesting -- a tuple of the form (depth, open, close) containing the nesting depth, and opening and closing nesting characters (tuple)
         minimal -- whether or not to perform the minimal number of splits, similar to str.split() with no arguments
-
+    
     Returns a list.
     '''
     if sep is None:
@@ -383,3 +383,4 @@ def split(string, sep=None, nesting=None, minimal=False):
                 result.append(string)
             break
     return result
+
