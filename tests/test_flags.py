@@ -12,44 +12,37 @@ class TestFlags(unittest.TestCase):
         self.assertEqual(changed_word, 'a')
 
     def test_multiple_rules_with_single_ignore_flag(self):
-        ruleset = '\n'.join(['a>b',
-                             'b>c ignore',
-                             'c>d'])
+        ruleset = ['a>b', 'b>c ignore', 'c>d']
         words = sce.apply_ruleset(['abcd'], ruleset)
         changed_word = str(words[0])
         self.assertEqual(changed_word, 'bbdd')
 
     def test_unconditional_stop_flag(self):
-        ruleset = '\n'.join(['a>b stop',
-                             'b>c'])
+        ruleset = ['a>b stop', 'b>c']
         words = sce.apply_ruleset(['abc'], ruleset)
         changed_word = str(words[0])
         self.assertEqual(changed_word, 'bbc')
 
     def test_matching_conditional_stop_flag(self):
-        ruleset = '\n'.join(['a>b/_# stop',
-                             'b>c'])
+        ruleset = ['a>b/_# stop', 'b>c']
         words = sce.apply_ruleset(['abca'], ruleset)
         changed_word = str(words[0])
         self.assertEqual(changed_word, 'abcb')
 
     def test_non_matching_conditional_stop_flag(self):
-        ruleset = '\n'.join(['a>b/_# stop',
-                             'b>c'])
+        ruleset = ['a>b/_# stop', 'b>c']
         words = sce.apply_ruleset(['abc'], ruleset)
         changed_word = str(words[0])
         self.assertEqual(changed_word, 'acc')
 
     def test_matching_ditto_flag(self):
-        ruleset = '\n'.join(['a>b/#_',
-                             '+d ditto'])
+        ruleset = ['a>b/#_', '+d ditto']
         words = sce.apply_ruleset(['abc'], ruleset)
         changed_word = str(words[0])
         self.assertEqual(changed_word, 'dbdbdcd')
 
     def test_non_matching_ditto_flag(self):
-        ruleset = '\n'.join(['a>b/_#',
-                             '+d ditto'])
+        ruleset = ['a>b/_#', '+d ditto']
         words = sce.apply_ruleset(['abc'], ruleset)
         changed_word = str(words[0])
         self.assertEqual(changed_word, 'abc')
@@ -71,17 +64,13 @@ class TestFlags(unittest.TestCase):
         self.assertEqual(changed_word, 'baaa')
 
     def test_given_value_age_flag(self):
-        ruleset = '\n'.join(['a>b age:2',
-                             'b>a'])
+        ruleset = ['a>b age:2', 'b>a']
         words = sce.apply_ruleset(['aaa'], ruleset)
         changed_word = str(words[0])
         self.assertEqual(changed_word, 'bbb')
 
     def test_null_value_age_flag(self):
-        ruleset = '\n'.join(['a>b age',
-                             '+a/_b',
-                             '+a/_b',
-                             '+a/_b'])
+        ruleset = ['a>b age', '+a/_b', '+a/_b', '+a/_b']
         words = sce.apply_ruleset(['a'], ruleset)
         changed_word = str(words[0])
         self.assertEqual(changed_word, 'bbbbbbbb')

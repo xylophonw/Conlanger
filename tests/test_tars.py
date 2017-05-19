@@ -12,23 +12,19 @@ class TestTargetSpecialChars(unittest.TestCase):
         self.assertEqual(changed_word, 'baba')
 
     def test_right_category_metathesis(self):
-        ruleset = '\n'.join(['x=a,b',
-                             '[x]c><'])
+        ruleset = ['x=a,b', '[x]c><']
         words = sce.apply_ruleset(['acbccbdca'], ruleset)
         changed_word = str(words[0])
         self.assertEqual(changed_word, 'cacbcbdca')
 
     def test_left_category_metathesis(self):
-        ruleset = '\n'.join(['x=a,b',
-                             'c[x]><'])
+        ruleset = ['x=a,b', 'c[x]><']
         words = sce.apply_ruleset(['acbccbdca'], ruleset)
         changed_word = str(words[0])
         self.assertEqual(changed_word, 'acbcbcdac')
 
     def test_category_metathesis(self):
-        ruleset = '\n'.join(['x=a,b',
-                             'y=c,d',
-                             '[x][y]><'])
+        ruleset = ['x=a,b', 'y=c,d', '[x][y]><']
         words = sce.apply_ruleset(['acbccbdca'], ruleset)
         changed_word = str(words[0])
         self.assertEqual(changed_word, 'cacbcdbca')

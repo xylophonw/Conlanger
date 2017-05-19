@@ -15,22 +15,19 @@ class TestCategories(unittest.TestCase):
         self.assertEqual(str(cat), 'a, b, c')
 
     def test_only_cat_in_target(self):
-        ruleset = '\n'.join(['x=a,b',
-                             '[x]>c'])
+        ruleset = ['x=a,b', '[x]>c']
         words = sce.apply_ruleset(['abc'], ruleset)
         changed_word = str(words[0])
         self.assertEqual(changed_word, 'ccc')
 
     def test_cat_and_non_cat_in_target(self):
-        ruleset = '\n'.join(['x=a,b',
-                             'd[x]>c'])
+        ruleset = ['x=a,b', 'd[x]>c']
         words = sce.apply_ruleset(['abcdadbdc'], ruleset)
         changed_word = str(words[0])
         self.assertEqual(changed_word, 'abcccdc')
 
     def test_subtract_cat(self):
-        ruleset = '\n'.join(['x=b,c',
-                             '-[x]'])
+        ruleset = ['x=b,c', '-[x]']
         words = sce.apply_ruleset(['abcd'], ruleset)
         changed_word = str(words[0])
         self.assertEqual(changed_word, 'ad')
