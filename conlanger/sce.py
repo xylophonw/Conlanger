@@ -202,8 +202,6 @@ class Rule():
         if word.phones == phones:
             raise WordUnchanged
 
-        return word
-
     def apply_match(self, match, word):
         '''Apply a replacement if a match meets the rule condition.
 
