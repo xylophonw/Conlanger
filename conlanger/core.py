@@ -183,26 +183,25 @@ class Word():
         return Word(self.phones * other)
     
     def copy(self):
-        return Word(self.phones, self.syllables)
+        return Word(self.phones, syllables=self.syllables)
     
     def reverse(self):
         self.phones.reverse()
     
     def strip(self, chars=None):
-        phones = self.phones.copy()
         if chars is None:
             chars = '#'
-        for i in range(len(phones)):
-            if phones[i] not in chars:
+        for i in range(len(self)):
+            if self.phones[i] not in chars:
                 start = i
                 break
         else:
             return self[-1:0]
-        for i in reversed(range(len(phones))):
-            if phones[i] not in chars:
+        for i in reversed(range(len(self))):
+            if self.phones[i] not in chars:
                 end = i+1
                 break
-        return self[start:end]
+        self.phones = self.phones[start:end]
     
     def find(self, sub, start=None, end=None, return_match=False):
         '''Match a sequence using pattern notation to the word.
@@ -222,8 +221,9 @@ class Word():
             end = len(self)
         elif end < 0:
             end += len(self)
+        sub = sub.copy()
         if isinstance(sub, Word):
-            sub = sub.strip() #we want to strip out the leading and trailing '#'s so that this works like finding substrings
+            sub.strip() #we want to strip out the leading and trailing '#'s so that this works like finding substrings
         for i in range(0, end-start):
             j = i + start #position in the word
             for k, sym in enumerate(sub):
@@ -281,16 +281,6 @@ class Word():
                 matchLeft = -1 if env[0] else 0
             matchRight = self.find(env[1], pos+len(tar))
             return matchLeft == matchRight == 0
-    
-    def replace(self, start, tar, rep):
-        rep = rep.copy()
-        for i in reversed(range(len(rep))):
-            if rep[i] == '%': #target copying
-                rep[i:i+1] = tar
-            elif rep[i] == '<': #target reversal/metathesis
-                rep[i:i+1] = reversed(tar)
-        self[start:start+len(tar)] = rep
-        return
 
 Config = namedtuple('Config', 'patterns, counts, constraints, freq, monofreq')
 

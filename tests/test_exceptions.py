@@ -13,7 +13,7 @@ class TestExceptions(unittest.TestCase):
             rule.apply(word)
 
     def test_word_unchanged_exception(self):
-        rule = sce.Rule(rule='+a/!c')
-        word = core.Word(lexeme='bc')
+        rule = sce.Rule(rule='a>a')
+        word = core.Word(lexeme='a')
         with self.assertRaises(sce.WordUnchanged):
             rule.apply(word)
